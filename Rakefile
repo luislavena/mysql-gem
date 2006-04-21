@@ -4,16 +4,16 @@ require 'rake/clean'
 require 'fileutils'
 include FileUtils
 
-CLEAN.include ["ext/*.{log,c,so,obj,pdb,lib,def,exp}", "ext/Makefile", "*.gem"]
+CLEAN.include ["ext/*.{log,c,so,obj,pdb,lib,def,exp,manifest}", "ext/Makefile", "*.gem"]
 
-name="mysql-win"
+name="mysql"
 version="2.7"
 
 desc "Do everything, baby!"
 task :default => [:package]
 
 #task :package => [:clobber,:compile,:test,:makegem]
-task :package => [:clobber,:compile,:makegem]
+task :package => [:clean,:compile,:makegem]
 
 desc "Compiles all extensions"
 task :compile do
@@ -23,7 +23,6 @@ task :compile do
   end
 end
 
-# defines the :test task
 desc "runs the given tests"
 task :test do
   cd "ext" do

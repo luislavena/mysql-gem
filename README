@@ -1,1 +1,27 @@
-"" 
+mysql-win - A win32 native build of the MySQL API module for Ruby.
+
+Copyright (c) 2006 Kevin Williams
+
+= Description
+
+blah
+
+= Dependencies
+
+ none
+
+= Installation
+
+This package is only available for RubyGems, and only for Windows, so the installation method is:
+
+ C:\> gem install mysql
+
+= Documentation
+
+Please see the README.html file in the 'docs' folder.
+
+= Contact
+
+Author: Kevin Williams
+* Web: http://mysql-win.rubyforge.org
+
