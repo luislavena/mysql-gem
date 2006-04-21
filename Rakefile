@@ -27,7 +27,7 @@ desc "runs the given tests"
 task :test do
   cd "ext" do
     # TODO: improve test setup so that tests pass with authentication
-	ruby "test.rb"
+	ruby "test.rb", %{#{ENV["TESTOPTS"]}}
   end
 end
 
@@ -36,14 +36,18 @@ task :makegem do
   spec = Gem::Specification.new do |s|
 	s.name = %{#{name}}
 	s.version = %{#{version}}
-    s.summary = "A win32-native build of the MySQL API module for Ruby."
-    s.description = s.summary
     s.author = "Kevin Williams"
     s.email = "kevin@bantamtech.com"
     s.homepage="http://mysql-win.rubyforge.org"
+    s.summary = "A win32-native build of the MySQL API module for Ruby."
+    s.description = s.summary
     s.rubyforge_project = s.name
     s.files += %w(ext/mysql.so ext/extconf.rb ext/extconf.rb.orig ext/mysql.c.in ext/test.rb README Rakefile docs)
+	s.rdoc_options << '--exclude' << 'ext' << '--main' << 'README'
+	s.extra_rdoc_files = ["README"]
+	s.has_rdoc = true
 	s.require_path = 'ext'
+	s.autorequire = 'mysql'
     s.required_ruby_version = '>= 1.8.2'
     s.platform = Gem::Platform::WIN32
   end

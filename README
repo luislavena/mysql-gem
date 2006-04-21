@@ -4,7 +4,7 @@ Copyright (c) 2006 Kevin Williams
 
 = Description
 
-blah
+A win32 native build of the MySQL API module for Ruby.
 
 = Dependencies
 
