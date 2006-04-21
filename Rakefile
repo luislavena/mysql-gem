@@ -2,12 +2,13 @@ require 'rake'
 require 'rubygems'
 require 'rake/clean'
 require 'fileutils'
+require 'date'
 include FileUtils
 
 CLEAN.include ["ext/*.{log,c,so,obj,pdb,lib,def,exp,manifest}", "ext/Makefile", "*.gem"]
 
 name="mysql"
-version="2.7"
+version="2.7.#{Date.today}".tr('-','.')
 
 desc "Do everything, baby!"
 task :default => [:package]
