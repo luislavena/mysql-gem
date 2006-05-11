@@ -7,7 +7,7 @@ if not have_library('libmysql', 'mysql_query', 'mysql.h') then
 	exit 1
 end
 
-have_func('mysql_ssl_set')
+have_func('mysql_ssl_set', 'mysql.h')
 
 newf = File::open('mysql.c', 'w')
 IO::foreach('mysql.c.in') do |l|

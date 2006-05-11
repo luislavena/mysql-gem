@@ -19,7 +19,7 @@ task :package => [:clean,:compile,:makegem]
 desc "Compiles all extensions"
 task :compile do
   cd "ext" do
-    sh %{ ruby extconf.rb --with-mysql-include="C:\\Program Files\\MySQL\\MySQL Server 5.0\\include" --with-mysql-lib="C:\\Program Files\\MySQL\\MySQL Server 5.0\\lib\\opt" }
+    sh %{ ruby extconf.rb --with-mysql-include=C:/Progra~1/MySQL/MySQLS~1.0/include --with-mysql-lib=C:/Progra~1/MySQL/MySQLS~1.0/lib/opt }
     sh %{ nmake }
   end
 end
