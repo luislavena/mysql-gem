@@ -2,13 +2,13 @@ require 'rake'
 require 'rubygems'
 require 'rake/clean'
 require 'fileutils'
-require 'date'
+#require 'date'
 include FileUtils
 
 CLEAN.include ["ext/*.{log,c,so,obj,pdb,lib,def,exp,manifest}", "ext/Makefile", "*.gem"]
 
 name="mysql"
-version="2.7.#{Date.today}".tr('-','.')
+version="2.7.1"
 
 desc "Do everything, baby!"
 task :default => [:package]
@@ -43,9 +43,9 @@ task :makegem do
     s.summary = "A win32-native build of the MySQL API module for Ruby."
     s.description = s.summary
     s.rubyforge_project = s.name
-    s.files += %w(ext/mysql.so ext/extconf.rb ext/extconf.rb.orig ext/mysql.c.in ext/test.rb README Rakefile docs)
+    s.files += %w(docs ext/mysql.so ext/extconf.rb ext/extconf.rb.orig ext/mysql.c.in ext/test.rb README Rakefile)
 	s.rdoc_options << '--exclude' << 'ext' << '--main' << 'README'
-	s.extra_rdoc_files = ["README"]
+	s.extra_rdoc_files = ["README", "docs/README.html"]
 	s.has_rdoc = true
 	s.require_path = 'ext'
 	s.autorequire = 'mysql'

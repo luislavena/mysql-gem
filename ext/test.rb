@@ -1,5 +1,5 @@
 #!/usr/local/bin/ruby
-# $Id: test.rb,v 1.16 2005/08/21 15:12:34 tommy Exp $
+# $Id: test.rb,v 1.18 2006/06/04 14:39:53 tommy Exp $
 
 require "test/unit"
 require "./mysql.o"
@@ -16,7 +16,7 @@ class TC_Mysql < Test::Unit::TestCase
   end
 
   def test_version()
-    assert_equal(20700, Mysql::VERSION)
+    assert_equal(20701, Mysql::VERSION)
   end
 
   def test_init()
@@ -796,7 +796,11 @@ class TC_MysqlStmt2 < Test::Unit::TestCase
       assert_equal([-1], @s.fetch)
       assert_equal([9223372036854775807], @s.fetch)
       assert_equal([-9223372036854775808], @s.fetch)
-      assert_equal([-1], @s.fetch)                       # MySQL problem
+      if @m.server_version >= 50000 then
+        assert_equal([9223372036854775807], @s.fetch)
+      else
+        assert_equal([-1], @s.fetch)                       # MySQL problem
+      end
       assert_equal([-9223372036854775808], @s.fetch)
       assert_equal([9223372036854775807], @s.fetch)
     end
@@ -809,7 +813,11 @@ class TC_MysqlStmt2 < Test::Unit::TestCase
       @s.prepare("select i from t")
       @s.execute
       assert_equal([0], @s.fetch)
-      assert_equal([-1], @s.fetch)                   # MySQL & MySQL/Ruby problem
+      if @m.server_version >= 50000 then
+        assert_equal([0], @s.fetch)
+      else
+        assert_equal([-1], @s.fetch)                   # MySQL & MySQL/Ruby problem
+      end
       assert_equal([9223372036854775807], @s.fetch)
       if @m.server_version < 50000 then
         assert_equal([-9223372036854775808], @s.fetch) # MySQL problem
@@ -857,12 +865,10 @@ class TC_MysqlStmt2 < Test::Unit::TestCase
       @s.prepare("select i from t")
       @s.execute
       assert_equal([0], @s.fetch)
-      assert_equal(-Float::MAX, @s.fetch[0])
-      if Mysql.client_version <= 40109 then  # higher version has bug
-        assert_equal(-Float::MIN, @s.fetch[0])
-        assert_equal(Float::MIN, @s.fetch[0])
-        assert_equal(Float::MAX, @s.fetch[0])
-      end
+      assert_in_delta(-Float::MAX, @s.fetch[0], Float::EPSILON)
+      assert_in_delta(-Float::MIN, @s.fetch[0], Float::EPSILON)
+      assert_in_delta(Float::MIN, @s.fetch[0], Float::EPSILON)
+      assert_in_delta(Float::MAX, @s.fetch[0], Float::EPSILON)
     end
   end
 
@@ -874,11 +880,9 @@ class TC_MysqlStmt2 < Test::Unit::TestCase
       @s.execute
       assert_equal([0], @s.fetch)
       assert_equal([0], @s.fetch)
-      if Mysql.client_version <= 40109 then  # higher version has bug
-        assert_equal([0], @s.fetch)
-        assert_equal(Float::MIN, @s.fetch[0])
-        assert_equal(Float::MAX, @s.fetch[0])
-      end
+      assert_equal([0], @s.fetch)
+      assert_in_delta(Float::MIN, @s.fetch[0], Float::EPSILON)
+      assert_in_delta(Float::MAX, @s.fetch[0], Float::EPSILON)
     end
   end
 
@@ -943,11 +947,11 @@ class TC_MysqlStmt2 < Test::Unit::TestCase
   def test_fetch_timestamp()
     if @m.server_version >= 40100 then
       @m.query("create temporary table t (i timestamp)")
-      @m.query("insert into t values ('1970-01-01 12:00:00'),('2037-12-31 23:59:59')")
+      @m.query("insert into t values ('1970-01-02 00:00:00'),('2037-12-30 23:59:59')")
       @s.prepare("select i from t")
       @s.execute
-      assert_equal([Mysql::Time.new(1970,1,1,12,0,0)], @s.fetch)
-      assert_equal([Mysql::Time.new(2037,12,31,23,59,59)], @s.fetch)
+      assert_equal([Mysql::Time.new(1970,1,2,0,0,0)], @s.fetch)
+      assert_equal([Mysql::Time.new(2037,12,30,23,59,59)], @s.fetch)
     end
   end
 
@@ -1006,7 +1010,11 @@ class TC_MysqlStmt2 < Test::Unit::TestCase
       @s.prepare("select i from t")
       @s.execute
       assert_equal([nil], @s.fetch)
-      assert_equal(["abc"], @s.fetch)
+      if @m.server_version >= 50000 then
+        assert_equal(["abc\0\0\0\0\0\0\0"], @s.fetch)
+      else
+        assert_equal(["abc"], @s.fetch)
+      end
     end
   end
 

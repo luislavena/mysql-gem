@@ -1,5 +1,5 @@
 /*	ruby mysql module
- *	$Id: mysql.c.in,v 1.30 2005/08/21 15:15:38 tommy Exp $
+ *	$Id: mysql.c.in,v 1.32 2006/06/04 14:29:28 tommy Exp $
  */
 
 #include "ruby.h"
@@ -14,7 +14,7 @@
 #include <mysql/mysqld_error.h>
 #endif
 
-#define MYSQL_RUBY_VERSION 20700
+#define MYSQL_RUBY_VERSION 20701
 
 #define GC_STORE_RESULT_LIMIT 20
 
@@ -92,7 +92,7 @@ static void free_mysql(struct mysql* my)
 {
     if (my->connection == Qtrue)
 	mysql_close(&my->handler);
-    free(my);
+    xfree(my);
 }
 
 static void free_mysqlres(struct mysql_res* resp)
@@ -101,7 +101,7 @@ static void free_mysqlres(struct mysql_res* resp)
 	mysql_free_result(resp->res);
 	store_result_count--;
     }
-    free(resp);
+    xfree(resp);
 }
 
 #if MYSQL_VERSION_ID >= 40101
@@ -151,7 +151,7 @@ static void free_mysqlstmt(struct mysql_stmt* s)
 	mysql_stmt_close(s->stmt);
     if (s->res)
 	mysql_free_result(s->res);
-    free(s);
+    xfree(s);
 }
 #endif
 
