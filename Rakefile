@@ -5,30 +5,24 @@ require 'fileutils'
 #require 'date'
 include FileUtils
 
-CLEAN.include ["ext/*.{log,c,so,obj,pdb,lib,def,exp,manifest}", "ext/Makefile", "*.gem"]
+CLEAN.include ["ext/*.{log,c,so,obj,pdb,lib,def,exp,manifest,orig}", "ext/Makefile", "*.gem"]
 
 name="mysql"
-version="2.7.1"
+version="2.7.3"
 
 desc "Do everything, baby!"
 task :default => [:package]
 
-#task :package => [:clobber,:compile,:test,:makegem]
 task :package => [:clean,:compile,:makegem]
 
 desc "Compiles all extensions"
 task :compile do
+  cp 'ext/mysql.c.in', 'ext/mysql.c.in.orig'
+  sh %{ patch -p0 ext/mysql.c.in < ext/mysql.c.in.patch }
   cd "ext" do
     sh %{ ruby extconf.rb --with-mysql-include=C:/Progra~1/MySQL/MySQLS~1.0/include --with-mysql-lib=C:/Progra~1/MySQL/MySQLS~1.0/lib/opt }
     sh %{ nmake }
-  end
-end
-
-desc "runs the given tests"
-task :test do
-  cd "ext" do
-    # TODO: improve test setup so that tests pass with authentication
-	ruby "test.rb", %{#{ENV["TESTOPTS"]}}
+	mv 'mysql.c.in.orig', 'mysql.c.in', :force => true
   end
 end
 
@@ -43,7 +37,7 @@ task :makegem do
     s.summary = "A win32-native build of the MySQL API module for Ruby."
     s.description = s.summary
     s.rubyforge_project = s.name
-    s.files += %w(docs ext/mysql.so ext/extconf.rb ext/extconf.rb.orig ext/mysql.c.in ext/test.rb README Rakefile)
+    s.files += %w(docs ext/mysql.so ext/extconf.rb ext/mysql.c.in ext/mysql.c.in.patch ext/test.rb README Rakefile)
 	s.rdoc_options << '--exclude' << 'ext' << '--main' << 'README'
 	s.extra_rdoc_files = ["README", "docs/README.html"]
 	s.has_rdoc = true

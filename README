@@ -8,7 +8,12 @@ A win32 native build of the MySQL API module for Ruby.
 
 = Dependencies
 
- none
+For this to work, you must have libmysql.dll in your PATH environmental variable. If you have MySQL installed locally,
+just make sure that <mysql_install_dir>\bin is in your path. If you don't have MySQL installed locally, you can
+install one or more of the MySQL tools, find the libmysql.dll included in their bin directory, and copy it to
+the %SystemRoot%\System32 folder.
+
+I can't include the dll here due to licensing conflicts.
 
 = Installation
 

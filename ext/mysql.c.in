@@ -1,5 +1,5 @@
 /*	ruby mysql module
- *	$Id: mysql.c.in,v 1.32 2006/06/04 14:29:28 tommy Exp $
+ *	$Id: mysql.c.in,v 1.38 2006-12-20 05:31:52 tommy Exp $
  */
 
 #include "ruby.h"
@@ -14,7 +14,7 @@
 #include <mysql/mysqld_error.h>
 #endif
 
-#define MYSQL_RUBY_VERSION 20701
+#define MYSQL_RUBY_VERSION 20703
 
 #define GC_STORE_RESULT_LIMIT 20
 
@@ -182,7 +182,6 @@ static VALUE mysqlres2obj(MYSQL_RES* res)
 static VALUE make_field_obj(MYSQL_FIELD* f)
 {
     VALUE obj;
-    VALUE hash;
     if (f == NULL)
 	return Qnil;
     obj = rb_obj_alloc(cMysqlField);
@@ -446,8 +445,6 @@ static VALUE my_close(VALUE obj)
 {
     MYSQL* m = GetHandler(obj);
     mysql_close(m);
-    if (mysql_errno(m))
-	mysql_raise(m);
     GetMysqlStruct(obj)->connection = Qfalse;
     return obj;
 }
@@ -700,6 +697,7 @@ static VALUE res_free(VALUE);
 /*	query(sql)	*/
 static VALUE query(VALUE obj, VALUE sql)
 {
+    int loop = 0;
     MYSQL* m = GetHandler(obj);
     Check_Type(sql, T_STRING);
     if (rb_block_given_p()) {
@@ -718,11 +716,12 @@ static VALUE query(VALUE obj, VALUE sql)
 		VALUE robj = mysqlres2obj(res);
 		rb_ensure(rb_yield, robj, res_free, robj);
 	    }
-	}
 #if MYSQL_VERSION_ID >= 40101
-	while (mysql_next_result(m) == 0);
+	    if ((loop = mysql_next_result(m)) > 0)
+        	mysql_raise(m);
+	} while (loop == 0);
 #else
-	while (0);
+	} while (0);
 #endif
 	return obj;
     }
@@ -1313,7 +1312,6 @@ static VALUE stmt_execute(int argc, VALUE *argv, VALUE obj)
     struct mysql_stmt *s = DATA_PTR(obj);
     MYSQL_STMT *stmt = s->stmt;
     my_bool true = 1;
-    my_bool false = 0;
     int i;
 
     check_stmt_closed(obj);
@@ -1334,7 +1332,7 @@ static VALUE stmt_execute(int argc, VALUE *argv, VALUE obj)
 	case T_BIGNUM:
 	    s->param.bind[i].buffer_type = MYSQL_TYPE_LONGLONG;
 	    s->param.bind[i].buffer = &(s->param.buffer[i]);
-	    *(long long*)(s->param.bind[i].buffer) = rb_big2ll(argv[i]);
+	    *(LONG_LONG*)(s->param.bind[i].buffer) = rb_big2ll(argv[i]);
 	    break;
 	case T_FLOAT:
 	    s->param.bind[i].buffer_type = MYSQL_TYPE_DOUBLE;
@@ -1435,7 +1433,7 @@ static VALUE stmt_fetch(VALUE obj)
 		v = INT2NUM(*(long*)s->result.bind[i].buffer);
 		break;
 	    case MYSQL_TYPE_LONGLONG:
-		v = rb_ll2inum(*(long long*)s->result.bind[i].buffer);
+		v = rb_ll2inum(*(LONG_LONG*)s->result.bind[i].buffer);
 		break;
 	    case MYSQL_TYPE_DOUBLE:
 		v = rb_float_new(*(double*)s->result.bind[i].buffer);
@@ -1560,6 +1558,7 @@ static enum enum_field_types buffer_type(MYSQL_FIELD *field)
     case FIELD_TYPE_DECIMAL:
 #if MYSQL_VERSION_ID >= 50003
     case FIELD_TYPE_NEWDECIMAL:
+    case FIELD_TYPE_BIT:
 #endif
 	return MYSQL_TYPE_STRING;
     case FIELD_TYPE_BLOB:
@@ -1630,8 +1629,11 @@ static VALUE stmt_result_metadata(VALUE obj)
     MYSQL_RES *res;
     check_stmt_closed(obj);
     res = mysql_stmt_result_metadata(s->stmt);
-    if (res == NULL && mysql_stmt_errno(s->stmt) != 0)
+    if (res == NULL) {
+      if (mysql_stmt_errno(s->stmt) != 0)
 	mysql_stmt_raise(s->stmt);
+      return Qnil;
+    }
     return mysqlres2obj(res);
 }
 
@@ -1700,6 +1702,7 @@ static VALUE time_initialize(int argc, VALUE* argv, VALUE obj)
     rb_iv_set(obj, "second", NILorFIXvalue(second));
     rb_iv_set(obj, "neg", (neg == Qnil || neg == Qfalse) ? Qfalse : Qtrue);
     rb_iv_set(obj, "second_part", NILorFIXvalue(second_part));
+    return obj;
 }
 
 static VALUE time_inspect(VALUE obj)
@@ -2080,6 +2083,10 @@ void Init_mysql(void)
     rb_define_const(cMysqlField, "TYPE_DATETIME", INT2NUM(FIELD_TYPE_DATETIME));
 #if MYSQL_VERSION_ID >= 32130
     rb_define_const(cMysqlField, "TYPE_YEAR", INT2NUM(FIELD_TYPE_YEAR));
+#endif
+#if MYSQL_VERSION_ID >= 50003
+    rb_define_const(cMysqlField, "TYPE_BIT", INT2NUM(FIELD_TYPE_BIT));
+    rb_define_const(cMysqlField, "TYPE_NEWDECIMAL", INT2NUM(FIELD_TYPE_NEWDECIMAL));
 #endif
     rb_define_const(cMysqlField, "TYPE_SET", INT2NUM(FIELD_TYPE_SET));
     rb_define_const(cMysqlField, "TYPE_BLOB", INT2NUM(FIELD_TYPE_BLOB));
