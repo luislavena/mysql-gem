@@ -7,7 +7,7 @@ require 'ext_helper'
 # House-keeping
 CLEAN.include '**/*.o', '**/*.so', '**/*.bundle', '**/*.a',
   '**/*.log', '{ext,lib}/*.{bundle,so,obj,pdb,lib,def,exp}',
-  'ext/Makefile'
+  'ext/Makefile', 'ext/mysql.c'
 
 spec = Gem::Specification.new do |s|
   s.name              = 'mysql'
@@ -24,7 +24,7 @@ spec = Gem::Specification.new do |s|
   s.rubyforge_project = 'http://rubyforge.org/projects/mysql-win'
   s.require_path      = 'lib'
   s.extensions        = %w[ ext/extconf.rb ]
-  s.files             = FileList[ 'ext/**/*.{c,rb}', 'Rakefile', *s.extra_rdoc_files ]
+  s.files             = FileList[ 'ext/**/*.{rb,in}', 'Rakefile', *s.extra_rdoc_files ]
 end
 
 Rake::GemPackageTask.new(spec) do |pkg|
@@ -33,17 +33,6 @@ end
 
 # Use of ext_helper to properly setup compile tasks and native gem generation
 setup_extension spec.name, spec
-
-desc "Compiles all extensions"
-task :compile do
-  cp 'ext/mysql.c.in', 'ext/mysql.c.in.orig'
-  sh %{ patch -p0 ext/mysql.c.in < ext/mysql.c.in.patch }
-  cd "ext" do
-    sh %{ ruby extconf.rb --with-mysql-include=C:/Progra~1/MySQL/MySQLS~1.0/include --with-mysql-lib=C:/Progra~1/MySQL/MySQLS~1.0/lib/opt }
-    sh %{ nmake }
-	mv 'mysql.c.in.orig', 'mysql.c.in', :force => true
-  end
-end
 
 desc "Build a binary gem for Win32"
 task :makegem do
