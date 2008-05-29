@@ -1,6 +1,6 @@
 require 'mkmf'
 
-if /mswin32/ =~ RUBY_PLATFORM
+if RUBY_PLATFORM =~ /mswin|mingw/
   inc, lib = dir_config('mysql')
   exit 1 unless have_library("libmysql")
 elsif mc = with_config('mysql-config') then
@@ -31,15 +31,13 @@ else
 end
 
 # make mysql constant
-File::open("conftest.c", "w") do |f|
-  f.puts src
-end
+File.open("conftest.c", "w") { |f| f.puts src }
 if defined? cpp_command then
   cpp = Config::expand(cpp_command(''))
 else
   cpp = Config::expand sprintf(CPP, $CPPFLAGS, $CFLAGS, '')
 end
-if /mswin32/ =~ RUBY_PLATFORM && !/-E/.match(cpp)
+if RUBY_PLATFORM =~ /mswin/ && !/-E/.match(cpp)
   cpp << " -E"
 end
 unless system "#{cpp} > confout" then
@@ -60,14 +58,24 @@ end
 File::unlink 'confout'
 error_syms.uniq!
 
-newf = File::open('mysql.c', 'w')
-IO::foreach('mysql.c.in') do |l|
-  newf.puts l
-  if l =~ /\/\* Mysql::Error constant \*\// then
-    error_syms.each do |s|
-      newf.puts "    rb_define_const(eMysql, \"#{s}\", INT2NUM(#{s}));"
+# add constants into mysql.c file
+File.open('mysql.c', 'w') do |newf|
+  IO.foreach('mysql.c.in') do |l|
+    if l =~ /MYSQL_RUBY_VERSION/ then
+      newf.puts "#if !defined(HAVE_ULONG) && !defined(TARGET_OS_LINUX) && !defined(__USE_MISC)"
+      newf.puts "typedef unsigned long	ulong;      /* Short for unsigned long */"
+      newf.puts "#endif"
+      newf.puts
+    end
+    newf.puts l
+    if l =~ /\/\* Mysql::Error constant \*\// then
+      error_syms.each do |s|
+        newf.puts "    rb_define_const(eMysql, \"#{s}\", INT2NUM(#{s}));"
+      end
     end
   end
 end
+
+$CFLAGS << ' -Wall ' unless RUBY_PLATFORM =~ /mswin/
 
 create_makefile("mysql")
