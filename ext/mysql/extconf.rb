@@ -1,9 +1,36 @@
+# Darwin (OSX) special cases for universal binaries
+# This is to avoid the lack of UB binaries for MySQL
+if RUBY_PLATFORM =~ /darwin/
+  ENV["RC_ARCHS"] = `uname -m`.chomp if `uname -sr` =~ /^Darwin/
+ 
+  # On PowerPC the defaults are fine
+  ENV["RC_ARCHS"] = '' if `uname -m` =~ /^Power Macintosh/
+end
+
 require 'mkmf'
 
-if /mswin32/ =~ RUBY_PLATFORM
+# Improved detection of mysql_config
+# Code from DataObjects do_mysql adapter
+
+# All instances of mysql_config on PATH ...
+def mysql_config_paths
+  ENV['PATH'].split(File::PATH_SEPARATOR).collect do |path|
+    [ "#{path}/mysql_config", "#{path}/mysql_config5" ].
+      detect { |bin| File.exist?(bin) }
+  end
+end
+
+# The first mysql_config binary on PATH ...
+def default_mysql_config_path
+  mysql_config_paths.compact.first
+end
+
+# Allow overriding path to mysql_config on command line using:
+# ruby extconf.rb --with-mysql-config=/path/to/mysql_config
+if RUBY_PLATFORM =~ /mswin|mingw/
   inc, lib = dir_config('mysql')
   exit 1 unless have_library("libmysql")
-elsif mc = with_config('mysql-config') then
+elsif mc = with_config('mysql-config', default_mysql_config_path) then
   mc = 'mysql_config' if mc == true
   cflags = `#{mc} --cflags`.chomp
   exit 1 if $? != 0
@@ -41,7 +68,7 @@ if defined? cpp_command then
 else
   cpp = Config.expand sprintf(CPP, $CPPFLAGS, $CFLAGS, '')
 end
-if /mswin32/ =~ RUBY_PLATFORM && !/-E/.match(cpp)
+if RUBY_PLATFORM =~ /mswin/ && !/-E/.match(cpp)
   cpp << " -E"
 end
 unless system "#{cpp} > confout" then
