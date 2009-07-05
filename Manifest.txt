@@ -1,0 +1,11 @@
+COPYING
+COPYING.ja
+README.html
+README_ja.html
+Rakefile
+ext/mysql/extconf.rb
+ext/mysql/mysql.c
+lib/mysql.rb
+tasks/gem.rake
+test/test.rb
+tommy.css
