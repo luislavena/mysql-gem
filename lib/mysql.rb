@@ -8,9 +8,9 @@ rescue LoadError
   end
 end
 
-# define version string to be used internally for the Gem.
+# define version string to be used internally for the Gem by Hoe.
 class Mysql
-  module Version
+  module HoeVersion
     VERSION = '2.8.1'
   end
 end
