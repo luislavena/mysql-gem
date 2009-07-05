@@ -1,1 +1,3 @@
-=== (unreleased)
+=== (unreleased) / 2009-07-??
+
+* Improved detection of mysql and it's configuration (mysql_config)
