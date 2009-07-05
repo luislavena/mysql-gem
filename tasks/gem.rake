@@ -10,7 +10,7 @@ HOE = Hoe.spec 'mysql' do
 
   spec_extras[:required_ruby_version] = Gem::Requirement.new('> 1.8.5')
 
-  spec_extras[:extensions] = ["ext/mysql/extconf.rb"]
+  spec_extras[:extensions] = ["ext/mysql_api/extconf.rb"]
 
   extra_dev_deps << ['rake-compiler', "~> 0.5.0"]
 end

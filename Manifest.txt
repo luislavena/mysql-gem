@@ -1,11 +1,15 @@
 COPYING
 COPYING.ja
+History.txt
+Manifest.txt
 README.html
+README.txt
 README_ja.html
 Rakefile
-ext/mysql/extconf.rb
-ext/mysql/mysql.c
+ext/mysql_api/extconf.rb
+ext/mysql_api/mysql.c
 lib/mysql.rb
 tasks/gem.rake
+tasks/native.rake
 test/test.rb
 tommy.css

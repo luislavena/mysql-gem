@@ -1882,7 +1882,7 @@ static VALUE error_sqlstate(VALUE obj)
  *	Initialize
  */
 
-void Init_mysql(void)
+void Init_mysql_api(void)
 {
     cMysql = rb_define_class("Mysql", rb_cObject);
     cMysqlRes = rb_define_class_under(cMysql, "Result", rb_cObject);
