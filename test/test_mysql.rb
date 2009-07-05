@@ -2,16 +2,30 @@
 # $Id: test.rb 244 2009-02-01 08:43:39Z tommy $
 
 require "test/unit"
-require "./mysql.o"
+require 'ostruct'
+require 'mysql'
+
+CONFIG = OpenStruct.new
+CONFIG.host = ENV['MYSQL_HOST'] || 'localhost'
+CONFIG.port = ENV['MYSQL_PORT'] || '3306'
+CONFIG.user = ENV['MYSQL_USER'] || 'root'
+CONFIG.pass = ENV['MYSQL_PASS'] || ''
+CONFIG.sock = ENV['MYSQL_SOCK']
+CONFIG.flag = ENV['MYSQL_FLAG']
+CONFIG.database = ENV['MYSQL_DATABASE'] || 'test'
 
 class TC_Mysql < Test::Unit::TestCase
   def setup()
-    @host, @user, @pass, db, port, sock, flag = ARGV
-    @db = db || "test"
-    @port = port.to_i
-    @sock = sock.nil? || sock.empty? ? nil : sock
-    @flag = flag.to_i
+    @host = CONFIG.host
+    @user = CONFIG.user
+    @pass = CONFIG.pass
+    @db   = CONFIG.database
+
+    @port = CONFIG.port.to_i
+    @sock = CONFIG.sock
+    @flag = CONFIG.flag.to_i
   end
+
   def teardown()
   end
 
@@ -95,13 +109,18 @@ end
 
 class TC_Mysql2 < Test::Unit::TestCase
   def setup()
-    @host, @user, @pass, db, port, sock, flag = ARGV
-    @db = db || "test"
-    @port = port.to_i
-    @sock = sock.nil? || sock.empty? ? nil : sock
-    @flag = flag.to_i
+    @host = CONFIG.host
+    @user = CONFIG.user
+    @pass = CONFIG.pass
+    @db   = CONFIG.database
+
+    @port = CONFIG.port.to_i
+    @sock = CONFIG.sock
+    @flag = CONFIG.flag.to_i
+
     @m = Mysql.new(@host, @user, @pass, @db, @port, @sock, @flag)
   end
+
   def teardown()
     @m.close if @m
   end
@@ -211,16 +230,21 @@ end
 
 class TC_MysqlRes < Test::Unit::TestCase
   def setup()
-    @host, @user, @pass, db, port, sock, flag = ARGV
-    @db = db || "test"
-    @port = port.to_i
-    @sock = sock.nil? || sock.empty? ? nil : sock
-    @flag = flag.to_i
+    @host = CONFIG.host
+    @user = CONFIG.user
+    @pass = CONFIG.pass
+    @db   = CONFIG.database
+
+    @port = CONFIG.port.to_i
+    @sock = CONFIG.sock
+    @flag = CONFIG.flag.to_i
+
     @m = Mysql.new(@host, @user, @pass, @db, @port, @sock, @flag)
     @m.query("create temporary table t (id int, str char(10), primary key (id))")
     @m.query("insert into t values (1, 'abc'), (2, 'defg'), (3, 'hi'), (4, null)")
     @res = @m.query("select * from t")
   end
+
   def teardown()
     @res.free
     @m.close
@@ -411,13 +435,18 @@ end
 
 class TC_MysqlStmt < Test::Unit::TestCase
   def setup()
-    @host, @user, @pass, db, port, sock, flag = ARGV
-    @db = db || "test"
-    @port = port.to_i
-    @sock = sock.nil? || sock.empty? ? nil : sock
-    @flag = flag.to_i
+    @host = CONFIG.host
+    @user = CONFIG.user
+    @pass = CONFIG.pass
+    @db   = CONFIG.database
+
+    @port = CONFIG.port.to_i
+    @sock = CONFIG.sock
+    @flag = CONFIG.flag.to_i
+
     @m = Mysql.new(@host, @user, @pass, @db, @port, @sock, @flag)
   end
+
   def teardown()
   end
 
@@ -441,14 +470,19 @@ end if Mysql.client_version >= 40100
 
 class TC_MysqlStmt2 < Test::Unit::TestCase
   def setup()
-    @host, @user, @pass, db, port, sock, flag = ARGV
-    @db = db || "test"
-    @port = port.to_i
-    @sock = sock.nil? || sock.empty? ? nil : sock
-    @flag = flag.to_i
+    @host = CONFIG.host
+    @user = CONFIG.user
+    @pass = CONFIG.pass
+    @db   = CONFIG.database
+
+    @port = CONFIG.port.to_i
+    @sock = CONFIG.sock
+    @flag = CONFIG.flag.to_i
+
     @m = Mysql.new(@host, @user, @pass, @db, @port, @sock, @flag)
     @s = @m.stmt_init()
   end
+
   def teardown()
     @s.close
     @m.close
