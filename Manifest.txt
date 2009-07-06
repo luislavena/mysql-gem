@@ -11,5 +11,6 @@ ext/mysql_api/mysql.c
 lib/mysql.rb
 tasks/gem.rake
 tasks/native.rake
-test/test.rb
+tasks/vendor_mysql.rake
+test/test_mysql.rb
 tommy.css
