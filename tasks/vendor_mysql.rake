@@ -25,11 +25,8 @@ file "vendor/mysql-#{MYSQL_VERSION}-win32/include/mysql.h" => ["vendor/mysql-noi
   end
 end
 
-# clean expanded packages
-CLEAN.include("vendor/mysql-#{MYSQL_VERSION}-win32")
-
-# clobber vendored packages
-CLOBBER.include('vendor')
+# clobber expanded packages
+CLOBBER.include("vendor/mysql-#{MYSQL_VERSION}-win32")
 
 # vendor:mysql
 task 'vendor:mysql' => ["vendor/mysql-#{MYSQL_VERSION}-win32/include/mysql.h"]
