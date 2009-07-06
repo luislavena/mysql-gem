@@ -205,11 +205,15 @@ class TC_Mysql2 < Test::Unit::TestCase
 
   def test_sqlstate()
     if @m.server_version >= 40100 then
-      assert_equal("00000", @m.sqlstate)
+      if RUBY_PLATFORM !~ /mingw|mswin/ then
+        assert_equal("00000", @m.sqlstate)
+      else
+        assert_equal("HY000", @m.sqlstate)
+      end
       assert_raises(Mysql::Error){@m.query("hogehoge")}
       assert_equal("42000", @m.sqlstate)
     end
-  end if Mysql.client_version >= 40100
+  end
 
   def test_query_with_result()
     assert_equal(true, @m.query_with_result)
