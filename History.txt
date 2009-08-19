@@ -1,6 +1,12 @@
-=== 2.8.1.1 / 2009-07-??
+=== 2.8.1 / 2009-08-19
 
-* Version built against MySQL 5.0.83
-* Improved detection of mysql and it's configuration (mysql_config)
-* Implemented support for cross compilation
-* Improved gem release process using Hoe as development dependency
+* New features:
+  * Early support for Ruby 1.9
+
+* Enhancements:
+  * Improved gem release process using Hoe as development dependency
+  * Implemented support for cross compilation
+  * Binary version built against MySQL 5.0.83
+
+* Bug fixes:
+  * Improved detection of mysql and it's configuration (mysql_config)
