@@ -1,11 +1,6 @@
 # Darwin (OSX) special cases for universal binaries
 # This is to avoid the lack of UB binaries for MySQL
-if RUBY_PLATFORM =~ /darwin/
-  ENV["RC_ARCHS"] = `uname -m`.chomp if `uname -sr` =~ /^Darwin/
- 
-  # On PowerPC the defaults are fine
-  ENV["RC_ARCHS"] = '' if `uname -m` =~ /^Power Macintosh/
-end
+ENV["RC_ARCHS"] = "" if RUBY_PLATFORM =~ /darwin/
 
 require 'mkmf'
 
