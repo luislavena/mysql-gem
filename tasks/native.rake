@@ -20,7 +20,7 @@ Rake::ExtensionTask.new('mysql_api', HOE.spec) do |ext|
     ext.config_options << "--with-mysql-lib=#{mysql_lib}/lib/opt"
   else
     ext.cross_compile = true
-    ext.cross_platform = ['i386-mingw32', 'i386-mswin32']
+    ext.cross_platform = ['i386-mingw32', 'i386-mswin32-60']
     ext.cross_config_options << "--with-mysql-include=#{mysql_lib}/include"
     ext.cross_config_options << "--with-mysql-lib=#{mysql_lib}/lib/opt"
     ext.cross_compiling do |gemspec|
