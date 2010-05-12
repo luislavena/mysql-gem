@@ -1,5 +1,5 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
-<!-- $Id: README.html 244 2009-02-01 08:43:39Z tommy $ -->
+<!-- $Id: README.html 250 2010-02-11 10:42:54Z tommy $ -->
 <html>
   <head>
     <meta http-equiv="content-style-type" content="text/css">
@@ -18,7 +18,10 @@
     </p>
 
     <h2>Download</h2>
-    <a href="http://tmtm.org/downloads/mysql/ruby/">tmtm.org</a>
+    <ul>
+      <li><a href="http://rubyforge.org/frs/?group_id=4550">RubyForge</a>
+      <li><a href="http://tmtm.org/downloads/mysql/ruby/">tmtm.org</a>
+    </ul>
 
     <h2>Requirement</h2>
     <ul>
@@ -818,6 +821,13 @@ st.close
 
     <h2>History</h2>
     <dl>
+      <dt>2010-02-11</dt>
+      <dd>
+        version 2.8.2<br>
+        <ul>
+          <li>Fix: Mysql#insert_id returns invalid value when larger than 2**32.
+        </ul>
+
       <dt>2009-02-01
       <dd>
         version 2.8.1<br>
@@ -1092,7 +1102,7 @@ st.close
     <address><a href="mailto:tommy@tmtm.org">TOMITA Masahiro</a></address>
 <!-- Created: Sun Aug 29 11:52:09 JST 2004 -->
 <!-- hhmts start -->
-Last modified: Sun Feb  1 17:40:49 JST 2009
+Last modified: Sun Feb  1 17:48:41 JST 2009
 <!-- hhmts end -->
   </body>
 </html>

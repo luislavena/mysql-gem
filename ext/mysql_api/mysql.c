@@ -1,5 +1,5 @@
 /*	ruby mysql module
- *	$Id: mysql.c 244 2009-02-01 08:43:39Z tommy $
+ *	$Id: mysql.c 250 2010-02-11 10:42:54Z tommy $
  */
 
 #include <ruby.h>
@@ -26,7 +26,7 @@
 #include <mysql/mysqld_error.h>
 #endif
 
-#define MYSQL_RUBY_VERSION 20801
+#define MYSQL_RUBY_VERSION 20802
 
 #define GC_STORE_RESULT_LIMIT 20
 
@@ -559,7 +559,7 @@ static VALUE info(VALUE obj)
 /*	insert_id()	*/
 static VALUE insert_id(VALUE obj)
 {
-    return INT2NUM(mysql_insert_id(GetHandler(obj)));
+    return ULL2NUM(mysql_insert_id(GetHandler(obj)));
 }
 
 /*	kill(pid)	*/
@@ -1621,7 +1621,7 @@ static VALUE stmt_insert_id(VALUE obj)
     my_ulonglong n;
     check_stmt_closed(obj);
     n = mysql_stmt_insert_id(s->stmt);
-    return INT2NUM(n);
+    return ULL2NUM(n);
 }
 
 /*	num_rows()	*/
