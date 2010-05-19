@@ -1,6 +1,6 @@
 = MySQL/Ruby Interface
 
-* http://github.com/luislaven/mysql-gem
+* http://github.com/luislavena/mysql-gem
 
 == DESCRIPTION
 
