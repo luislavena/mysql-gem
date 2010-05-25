@@ -1,7 +1,7 @@
 # use rake-compiler for building the extension
 require 'rake/extensiontask'
 
-MYSQL_VERSION = "5.1.46"
+MYSQL_VERSION = "5.1.47"
 MYSQL_MIRROR  = ENV['MYSQL_MIRROR'] || "http://mysql.localhost.net.ar"
 
 Rake::ExtensionTask.new('mysql_api', HOE.spec) do |ext|
