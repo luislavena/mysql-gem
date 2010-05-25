@@ -10,6 +10,7 @@ extra/README.html
 extra/README_ja.html
 extra/tommy.css
 lib/mysql.rb
+lib/mysql/version.rb
 tasks/gem.rake
 tasks/native.rake
 tasks/vendor_mysql.rake
