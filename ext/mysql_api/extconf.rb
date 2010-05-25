@@ -90,4 +90,4 @@ File.open('error_const.h', 'w') do |f|
   end
 end
 
-create_makefile("mysql_api")
+create_makefile("mysql/mysql_api")

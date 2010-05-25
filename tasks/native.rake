@@ -8,10 +8,13 @@ Rake::ExtensionTask.new('mysql_api', HOE.spec) do |ext|
   # reference where the vendored MySQL got extracted
   mysql_lib = File.expand_path(File.join(File.dirname(__FILE__), '..', 'vendor', "mysql-#{MYSQL_VERSION}-win32"))
 
+  # where native extension will be copied (matches makefile)
+  ext.lib_dir = "lib/mysql"
+
   # define target for extension (supporting fat binaries)
   if RUBY_PLATFORM =~ /mswin|mingw/ then
     ruby_ver = RUBY_VERSION.match(/(\d+\.\d+)/)[1]
-    ext.lib_dir = "lib/#{ruby_ver}"
+    ext.lib_dir = "lib/mysql/#{ruby_ver}"
   end
 
   # automatically add build options to avoid need of manual input

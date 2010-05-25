@@ -1,11 +1,9 @@
 # support multiple ruby version (fat binaries under windows)
 begin
-  require 'mysql_api'
+  RUBY_VERSION =~ /(\d+.\d+)/
+  require "mysql/#{$1}/mysql_api"
 rescue LoadError
-  if RUBY_PLATFORM =~ /mingw|mswin/ then
-    RUBY_VERSION =~ /(\d+.\d+)/
-    require "#{$1}/mysql_api"
-  end
+  require 'mysql/mysql_api'
 end
 
 require 'mysql/version'
