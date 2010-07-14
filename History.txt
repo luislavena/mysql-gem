@@ -1,3 +1,8 @@
+=== unreleased
+
+* Enhancements:
+  * Detect MySQL version at load time and fail on mismatch [ghazel]
+
 === 2.8.1 / 2009-08-21
 
 * New features:
