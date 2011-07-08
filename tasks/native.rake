@@ -1,12 +1,12 @@
 # use rake-compiler for building the extension
 require 'rake/extensiontask'
 
-MYSQL_VERSION = "5.1.47"
-MYSQL_MIRROR  = ENV['MYSQL_MIRROR'] || "http://mysql.localhost.net.ar"
+CONNECTOR_VERSION = "6.0.2"
+CONNECTOR_MIRROR  = ENV['CONNECTOR_MIRROR'] || "http://mysql.localhost.net.ar"
 
 Rake::ExtensionTask.new('mysql_api', HOE.spec) do |ext|
   # reference where the vendored MySQL got extracted
-  mysql_lib = File.expand_path(File.join(File.dirname(__FILE__), '..', 'vendor', "mysql-#{MYSQL_VERSION}-win32"))
+  mysql_lib = File.expand_path(File.join(File.dirname(__FILE__), '..', 'vendor', "mysql-connector-c-noinstall-#{CONNECTOR_VERSION}-win32"))
 
   # where native extension will be copied (matches makefile)
   ext.lib_dir = "lib/mysql"
@@ -19,26 +19,24 @@ Rake::ExtensionTask.new('mysql_api', HOE.spec) do |ext|
 
   # automatically add build options to avoid need of manual input
   if RUBY_PLATFORM =~ /mswin|mingw/ then
-    ext.config_options << "--with-mysql-include=#{mysql_lib}/include"
-    ext.config_options << "--with-mysql-lib=#{mysql_lib}/lib/opt"
+    ext.config_options << "--with-mysql-dir=#{mysql_lib}"
   else
     ext.cross_compile = true
     ext.cross_platform = ['i386-mingw32', 'i386-mswin32-60']
-    ext.cross_config_options << "--with-mysql-include=#{mysql_lib}/include"
-    ext.cross_config_options << "--with-mysql-lib=#{mysql_lib}/lib/opt"
+    ext.cross_config_options << "--with-mysql-dir=#{mysql_lib}"
     ext.cross_compiling do |gemspec|
       gemspec.post_install_message = <<-POST_INSTALL_MESSAGE
 
 ======================================================================================================
 
   You've installed the binary version of #{gemspec.name}.
-  It was built using MySQL version #{MYSQL_VERSION}.
+  It was built using MySQL Connector/C version #{CONNECTOR_VERSION}.
   It's recommended to use the exact same version to avoid potential issues.
 
   At the time of building this gem, the necessary DLL files where available
   in the following download:
 
-  http://dev.mysql.com/get/Downloads/MySQL-#{MYSQL_VERSION[0,3]}/mysql-noinstall-#{MYSQL_VERSION}-win32.zip/from/pick
+  http://dev.mysql.com/get/Downloads/Connector-C/mysql-connector-c-noinstall-#{CONNECTOR_VERSION}-win32.zip/from/pick
 
   You can put the lib\\opt\\libmysql.dll available in this package in your Ruby bin
   directory, for example C:\\Ruby\\bin
