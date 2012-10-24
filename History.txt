@@ -2,6 +2,10 @@
 
 * Enhancements:
   * Detect MySQL version at load time and fail on mismatch [ghazel]
+  * Use MySQL Connector/C for Windows binary bindings instead
+
+* Bug fixes:
+  * Use RbConfig since Config is deprecated in Ruby 2.0 [tenderlove]
 
 === 2.8.1 / 2009-08-21
 
