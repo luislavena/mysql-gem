@@ -34,12 +34,12 @@ Rake::ExtensionTask.new('mysql_api', HOE.spec) do |ext|
   It's recommended to use the exact same version to avoid potential issues.
 
   At the time of building this gem, the necessary DLL files where available
-  in the following download:
+  in the following URL:
 
   http://dev.mysql.com/get/Downloads/Connector-C/mysql-connector-c-noinstall-#{CONNECTOR_VERSION}-win32.zip/from/pick
 
-  You can put the lib\\opt\\libmysql.dll available in this package in your Ruby bin
-  directory, for example C:\\Ruby\\bin
+  You can put the lib\\libmysql.dll available in this package to your Ruby bin directory.
+  E.g. C:\\Ruby\\bin
 
 ======================================================================================================
 
