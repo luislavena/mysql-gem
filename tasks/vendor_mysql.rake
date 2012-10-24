@@ -4,9 +4,11 @@ require 'rake/extensioncompiler'
 # download mysql library and headers
 directory "vendor"
 
-file "vendor/mysql-noinstall-#{MYSQL_VERSION}-win32.zip" => ['vendor'] do |t|
-  base_version = MYSQL_VERSION.gsub(/\.[0-9]+$/, '')
-  url = "http://dev.mysql.com/get/Downloads/MySQL-#{base_version}/#{File.basename(t.name)}/from/#{MYSQL_MIRROR}/"
+CONNECTOR_DIR = "mysql-connector-c-noinstall-#{CONNECTOR_VERSION}-win32"
+CONNECTOR_ZIP = "#{CONNECTOR_DIR}.zip"
+
+file "vendor/#{CONNECTOR_ZIP}" => ['vendor'] do |t|
+  url = "http://dev.mysql.com/get/Downloads/Connector-C/#{File.basename(t.name)}/from/#{CONNECTOR_MIRROR}/"
   when_writing "downloading #{t.name}" do
     cd File.dirname(t.name) do
       sh "wget -c #{url} || curl -C - -O #{url}"
@@ -14,11 +16,11 @@ file "vendor/mysql-noinstall-#{MYSQL_VERSION}-win32.zip" => ['vendor'] do |t|
   end
 end
 
-file "vendor/mysql-#{MYSQL_VERSION}-win32/include/mysql.h" => ["vendor/mysql-noinstall-#{MYSQL_VERSION}-win32.zip"] do |t|
+file "vendor/#{CONNECTOR_DIR}/include/mysql.h" => ["vendor/#{CONNECTOR_ZIP}"] do |t|
   full_file = File.expand_path(t.prerequisites.last)
   when_writing "creating #{t.name}" do
     cd "vendor" do
-      sh "unzip #{full_file} mysql-#{MYSQL_VERSION}-win32/bin/** mysql-#{MYSQL_VERSION}-win32/include/** mysql-#{MYSQL_VERSION}-win32/lib/**"
+      sh "unzip #{full_file} #{CONNECTOR_DIR}/bin/** #{CONNECTOR_DIR}/include/** #{CONNECTOR_DIR}/lib/**"
     end
     # update file timestamp to avoid Rake perform this extraction again.
     touch t.name
@@ -26,10 +28,10 @@ file "vendor/mysql-#{MYSQL_VERSION}-win32/include/mysql.h" => ["vendor/mysql-noi
 end
 
 # clobber expanded packages
-CLOBBER.include("vendor/mysql-#{MYSQL_VERSION}-win32")
+CLOBBER.include("vendor/#{CONNECTOR_ZIP}")
 
 # vendor:mysql
-task 'vendor:mysql' => ["vendor/mysql-#{MYSQL_VERSION}-win32/include/mysql.h"]
+task 'vendor:mysql' => ["vendor/#{CONNECTOR_DIR}/include/mysql.h"]
 
 # hook into cross compilation vendored mysql dependency
 if RUBY_PLATFORM =~ /mingw|mswin/ then
