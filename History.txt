@@ -1,5 +1,8 @@
 === unreleased
 
+* Incompatibility:
+  * Requires Ruby 1.8.7 or newer.
+
 * Enhancements:
   * Detect MySQL version at load time and fail on mismatch [ghazel]
   * Use MySQL Connector/C for Windows binary bindings instead

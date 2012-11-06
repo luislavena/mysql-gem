@@ -8,7 +8,7 @@ HOE = Hoe.spec 'mysql' do
   self.need_tar       = false
   self.need_zip       = false
 
-  spec_extras[:required_ruby_version] = Gem::Requirement.new('>= 1.8.6')
+  spec_extras[:required_ruby_version] = Gem::Requirement.new('>= 1.8.7')
 
   spec_extras[:extensions] = ["ext/mysql_api/extconf.rb"]
 
