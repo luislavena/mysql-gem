@@ -1,4 +1,4 @@
-=== unreleased
+=== 2.8.2 / 2012-11-06
 
 * Incompatibility:
   * Requires Ruby 1.8.7 or newer.
