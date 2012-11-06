@@ -10,9 +10,7 @@ CONNECTOR_ZIP = "#{CONNECTOR_DIR}.zip"
 file "vendor/#{CONNECTOR_ZIP}" => ['vendor'] do |t|
   url = "http://dev.mysql.com/get/Downloads/Connector-C/#{File.basename(t.name)}/from/#{CONNECTOR_MIRROR}/"
   when_writing "downloading #{t.name}" do
-    cd File.dirname(t.name) do
-      sh "wget -c #{url} || curl -C - -O #{url}"
-    end
+    sh "curl -L #{url} -o #{t.name}"
   end
 end
 
@@ -29,6 +27,7 @@ end
 
 # clobber expanded packages
 CLOBBER.include("vendor/#{CONNECTOR_ZIP}")
+CLOBBER.include("vendor/#{CONNECTOR_DIR}")
 
 # vendor:mysql
 task 'vendor:mysql' => ["vendor/#{CONNECTOR_DIR}/include/mysql.h"]
