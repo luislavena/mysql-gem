@@ -12,7 +12,7 @@ HOE = Hoe.spec 'mysql' do
 
   spec_extras[:extensions] = ["ext/mysql_api/extconf.rb"]
 
-  extra_dev_deps << ['rake-compiler', "~> 0.7.0"]
+  extra_dev_deps << ['rake-compiler', "~> 0.8.1"]
 end
 
 file "#{HOE.spec.name}.gemspec" => ['Rakefile', 'tasks/gem.rake'] do |t|
