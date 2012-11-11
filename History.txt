@@ -1,4 +1,4 @@
-=== 2.8.2 / 2012-11-06
+=== unreleased (next 2.9.x)
 
 * Incompatibility:
   * Requires Ruby 1.8.7 or newer.
@@ -9,6 +9,11 @@
 
 * Bug fixes:
   * Use RbConfig since Config is deprecated in Ruby 2.0 [tenderlove]
+
+=== 2.8.2 / 2012-11-06 / *yanked*
+
+* Yanked:
+  * Changes in requirements render this gem incompatible for some users.
 
 === 2.8.1 / 2009-08-21
 
