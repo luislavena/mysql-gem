@@ -1,5 +1,8 @@
 === 2.9.0 / 2012-11-17
 
+DEPRECATION: Ruby 1.8.6 is no longer supported. Do not update your production
+application blindly without testing first any dependency change!
+
 * Incompatibility:
   * Requires Ruby 1.8.7 or newer.
 
