@@ -342,7 +342,7 @@ class TC_MysqlRes < Test::Unit::TestCase
     assert_equal("t", f.table)
     assert_equal(nil, f.def)
     assert_equal(Mysql::Field::TYPE_STRING, f.type)
-    assert_equal(10, f.length)
+    assert_equal(30, f.length)
     assert_equal(4, f.max_length)
     assert_equal(0, f.flags)
     assert_equal(0, f.decimals)
@@ -399,7 +399,7 @@ class TC_MysqlRes < Test::Unit::TestCase
       "table" => "t",
       "def" => nil,
       "type" => Mysql::Field::TYPE_STRING,
-      "length" => 10,
+      "length" => 30,
       "max_length" => 4,
       "flags" => 0,
       "decimals" => 0,
