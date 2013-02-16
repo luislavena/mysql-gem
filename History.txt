@@ -1,3 +1,8 @@
+=== (in Git)
+
+* Bugfixes:
+  * Use C89 comment style in source code. #13 [knu]
+
 === 2.9.0 / 2012-11-17
 
 DEPRECATION: Ruby 1.8.6 is no longer supported. Do not update your production

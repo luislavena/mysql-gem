@@ -1890,7 +1890,7 @@ void Init_mysql_api(void)
     for (i = 0; lib[i] != 0 && MYSQL_SERVER_VERSION[i] != 0; i++) {
         if (lib[i] == '.') {
             dots++;
-            // we only compare MAJOR and MINOR
+            /* we only compare MAJOR and MINOR */
             if (dots == 2) break;
         }
         if (lib[i] != MYSQL_SERVER_VERSION[i]) {
