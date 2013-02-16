@@ -1,4 +1,4 @@
-=== 2.9.1 / 2013-02-16
+=== 2.9.1 / 2013-02-16 / Vacation time!
 
 * Bugfixes:
   * Use C89 comment style in source code. #13 [knu]
