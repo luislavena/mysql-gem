@@ -445,7 +445,7 @@ static VALUE initialize(int argc, VALUE* argv, VALUE obj)
 /*	affected_rows()	*/
 static VALUE affected_rows(VALUE obj)
 {
-    return INT2NUM(mysql_affected_rows(GetHandler(obj)));
+    return ULL2NUM(mysql_affected_rows(GetHandler(obj)));
 }
 
 #if MYSQL_VERSION_ID >= 32303
@@ -1268,7 +1268,7 @@ static VALUE stmt_affected_rows(VALUE obj)
     my_ulonglong n;
     check_stmt_closed(obj);
     n = mysql_stmt_affected_rows(s->stmt);
-    return INT2NUM(n);
+    return ULL2NUM(n);
 }
 
 #if 0
