@@ -2,7 +2,7 @@ COPYING
 COPYING.ja
 History.txt
 Manifest.txt
-README.txt
+README.md
 Rakefile
 ext/mysql_api/extconf.rb
 ext/mysql_api/mysql.c
