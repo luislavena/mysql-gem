@@ -731,10 +731,11 @@ static VALUE res_free(VALUE);
 static VALUE query(VALUE obj, VALUE sql)
 {
     int loop = 0;
+    VALUE e;
     MYSQL* m = GetHandler(obj);
     Check_Type(sql, T_STRING);
     if (GetMysqlStruct(obj)->connection == Qfalse) {
-        VALUE e = rb_exc_new2(eMysql, "query: test not connected");
+        e = rb_exc_new2(eMysql, "query: not connected");
         rb_iv_set(e, "errno", Qnil);
         rb_exc_raise(e);
     }
