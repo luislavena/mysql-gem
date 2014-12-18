@@ -734,7 +734,9 @@ static VALUE query(VALUE obj, VALUE sql)
     MYSQL* m = GetHandler(obj);
     Check_Type(sql, T_STRING);
     if (GetMysqlStruct(obj)->connection == Qfalse) {
-        rb_raise(eMysql, "query: not connected");
+        VALUE e = rb_exc_new2(eMysql, "query: test not connected");
+        rb_iv_set(e, "errno", Qnil);
+        rb_exc_raise(e);
     }
     if (rb_block_given_p()) {
 	if (mysql_real_query(m, RSTRING_PTR(sql), RSTRING_LEN(sql)) != 0)
