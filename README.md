@@ -2,6 +2,18 @@
 
 * http://github.com/luislavena/mysql-gem
 
+## Maintainer needed
+
+As January 1st, 2015, this project has become unmaintained:
+
+https://groups.google.com/d/topic/rubyinstaller/nzpIDZqXO-Q/discussion
+
+If you want to take over maintenance of this project, please
+[open an issue](issues) stating your intention and we can coordinate the
+entire process there.
+
+Thank you.
+
 ## DESCRIPTION
 
 This is the MySQL API module for Ruby. It provides the same functions for Ruby
